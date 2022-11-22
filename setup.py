@@ -16,15 +16,16 @@ def read(*parts):
 class numpy_get_include:
     def __str__(self):
         import numpy
+
         return numpy.get_include()
 
 
-lttbc_py = Extension("lttbc", sources=["lttbc.c"],
-                     define_macros=[
-                         ("NPY_NO_DEPRECATED_API", "NPY_1_7_API_VERSION")],
-                     include_dirs=[numpy_get_include(),
-                                   get_script_path()],
-                     )
+lttbc_py = Extension(
+    "lttbc",
+    sources=["lttbc.c"],
+    define_macros=[("NPY_NO_DEPRECATED_API", "NPY_1_7_API_VERSION")],
+    include_dirs=[numpy_get_include(), get_script_path()],
+)
 
 setup(
     name="lttbc",
@@ -39,7 +40,7 @@ setup(
     long_description_content_type="text/markdown",
     license="MIT",
     install_requires=["numpy"],
-    setup_requires=["setuptools_scm"],
+    setup_requires=["numpy", "setuptools_scm"],
     python_requires=">=3.5",
     classifiers=[
         "Development Status :: 5 - Production/Stable",

@@ -1,0 +1,9 @@
+# stub pyproject.toml to be used together with setup.py to build extension
+# see https://stackoverflow.com/a/66479252/532513
+
+[build-system]
+requires = ["setuptools>=61", "numpy~=1.21"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lttbc"

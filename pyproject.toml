@@ -16,7 +16,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "lttbc"
 version = "0.2.3"
-description = "Bleh."
+description = "Largest triangle three buckets module for Python written in C"
 authors = [{name = "European XFEL GmbH", email = "dennis.goeries@xfel.eu"}]
 dependencies = [
   "numpy~=1.21"

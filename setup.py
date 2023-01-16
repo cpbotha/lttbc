@@ -39,8 +39,8 @@ setup(
     long_description=read("README.txt"),
     long_description_content_type="text/markdown",
     license="MIT",
-    install_requires=["numpy"],
-    setup_requires=["numpy", "setuptools_scm"],
+    install_requires=["numpy>=1.21"],
+    setup_requires=["numpy>=1.21", "setuptools_scm"],
     python_requires=">=3.5",
     classifiers=[
         "Development Status :: 5 - Production/Stable",

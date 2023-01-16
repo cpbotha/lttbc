@@ -10,7 +10,8 @@
 # python -m build
 
 [build-system]
-requires = ["setuptools>=61", "numpy~=1.21"]
+# https://peps.python.org/pep-0440/#version-specifiers
+requires = ["setuptools>=61", "numpy == 1.21.*"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -19,5 +20,5 @@ version = "0.2.3"
 description = "Largest triangle three buckets module for Python written in C"
 authors = [{name = "European XFEL GmbH", email = "dennis.goeries@xfel.eu"}]
 dependencies = [
-  "numpy~=1.21"
+  "numpy == 1.21.*"
 ]

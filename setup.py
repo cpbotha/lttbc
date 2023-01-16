@@ -36,7 +36,8 @@ setup(
     maintainer="Dennis Goeries",
     url="https://github.com/dgoeries/lttbc/",
     description="Largest triangle three buckets module for Python written in C",
-    long_description=read("README.txt"),
+    # this errors out during python -m build, so we remove it
+    #long_description=read("README.txt"),
     long_description_content_type="text/markdown",
     license="MIT",
     #install_requires=["numpy~=1.21"],

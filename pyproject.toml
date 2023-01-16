@@ -1,5 +1,13 @@
-# stub pyproject.toml to be used together with setup.py to build extension
+# stub pyproject.toml to be used together with setup.py to build extension, according to PEP-517
 # see https://stackoverflow.com/a/66479252/532513
+# also https://setuptools.pypa.io/en/latest/userguide/ext_modules.html
+
+# we need this so that we can correctly specify numpy build deps --
+# with only the setup.py, poetry 1.2 would somehow build with a NEWER numpy
+
+# you can test this locally by doing:
+# pip install --user --upgrade build
+# python -m build
 
 [build-system]
 requires = ["setuptools>=61", "numpy~=1.21"]
@@ -7,3 +15,9 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "lttbc"
+version = "0.2.3"
+description = "Bleh."
+authors = [{name = "European XFEL GmbH", email = "dennis.goeries@xfel.eu"}]
+dependencies = [
+  "numpy~=1.21"
+]

@@ -11,7 +11,8 @@
 
 [build-system]
 # https://peps.python.org/pep-0440/#version-specifiers
-requires = ["setuptools>=61", "numpy == 1.21.*"]
+# in spite of setting numpy version req == 1.21.*, poetry 1.2.2 would still build with 1.24 (API version 16)
+requires = ["setuptools>=61", "numpy == 1.24.*"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -20,5 +21,5 @@ version = "0.2.3"
 description = "Largest triangle three buckets module for Python written in C"
 authors = [{name = "European XFEL GmbH", email = "dennis.goeries@xfel.eu"}]
 dependencies = [
-  "numpy == 1.21.*"
+  "numpy == 1.24.*"
 ]

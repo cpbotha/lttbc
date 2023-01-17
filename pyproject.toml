@@ -12,7 +12,11 @@
 [build-system]
 # https://peps.python.org/pep-0440/#version-specifiers
 # in spite of setting numpy version req == 1.21.*, poetry 1.2.2 would still build with 1.24 (API version 16)
-requires = ["setuptools>=61", "numpy == 1.24.*"]
+# Now I'm trying setting the complete version according to scipy's example:
+# - https://github.com/scipy/scipy/blob/main/pyproject.toml
+# - scipy uses a mix of build-system.requires and setup.install_requires see:
+# - https://scipy.github.io/devdocs/dev/core-dev/index.html#version-ranges-for-numpy-and-other-dependencies
+requires = ["setuptools>=61", "numpy == 1.21.6"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -21,5 +25,5 @@ version = "0.2.4"
 description = "Largest triangle three buckets module for Python written in C"
 authors = [{name = "European XFEL GmbH", email = "dennis.goeries@xfel.eu"}]
 dependencies = [
-  "numpy == 1.24.*"
+  "numpy == 1.21.*"
 ]

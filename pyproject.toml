@@ -25,5 +25,7 @@ version = "0.2.4"
 description = "Largest triangle three buckets module for Python written in C"
 authors = [{name = "European XFEL GmbH", email = "dennis.goeries@xfel.eu"}]
 dependencies = [
-  "numpy == 1.21.*"
+  # based on https://numpy.org/devdocs/dev/depending_on_numpy.html we keep the build requirement at lowest
+  # but runtime dependency can be easier
+  "numpy >= 1.21"
 ]

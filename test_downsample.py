@@ -4,7 +4,7 @@ from time import perf_counter
 import numpy as np
 import pytest
 
-import lttbc
+import lttbc_offsets as lttbc
 
 ARRAY_SIZE = 1000
 THRESHOLD = 100

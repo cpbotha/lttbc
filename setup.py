@@ -17,7 +17,7 @@ class numpy_get_include:
 
 
 lttbc_py = Extension(
-    "lttbc",
+    "lttbc_offsets",
     sources=["lttbc.c"],
     define_macros=[("NPY_NO_DEPRECATED_API", "NPY_1_7_API_VERSION")],
     include_dirs=[numpy_get_include(), get_script_path()],

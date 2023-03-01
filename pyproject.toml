@@ -20,8 +20,8 @@ requires = ["setuptools>=61", "numpy == 1.21.6"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "lttbc"
-version = "0.2.4"
+name = "lttbc-offsets"
+version = "0.3.0"
 description = "Largest triangle three buckets module for Python written in C"
 authors = [{name = "European XFEL GmbH", email = "dennis.goeries@xfel.eu"}]
 dependencies = [

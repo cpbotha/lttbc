@@ -39,7 +39,7 @@ static PyObject* downsample(PyObject *self, PyObject *args) {
     const Py_ssize_t data_length = (Py_ssize_t)PyArray_DIM(x_array, 0);
     if (threshold >= data_length || threshold <= 0) {
         // Nothing to do!
-        PyObject *value = Py_BuildValue("OO", x_array, y_array);
+        PyObject *value = Py_BuildValue("OOO", x_array, y_array, Py_None);
         Py_DECREF(x_array);
         Py_DECREF(y_array);
         return value;
@@ -56,9 +56,12 @@ static PyObject* downsample(PyObject *self, PyObject *args) {
         PyArray_DescrFromType(NPY_DOUBLE), 0);
     PyArrayObject *sampled_y = (PyArrayObject *)PyArray_Empty(1, dims,
         PyArray_DescrFromType(NPY_DOUBLE), 0);
+    // use intp for any array indexing
+    PyArrayObject *sampled_offsets = (PyArrayObject *)PyArray_Empty(1, dims, PyArray_DescrFromType(NPY_INTP), 0);
     // Get a pointer to its data
     double *sampled_x_data = (double*)PyArray_DATA(sampled_x);
     double *sampled_y_data = (double*)PyArray_DATA(sampled_y);
+    npy_intp *sampled_offsets_data = (npy_intp*)PyArray_DATA(sampled_offsets);
 
     // The main loop here!
     Py_ssize_t sampled_index = 0;
@@ -69,8 +72,10 @@ static PyObject* downsample(PyObject *self, PyObject *args) {
 
     double max_area_point_x = 0.0;
     double max_area_point_y = 0.0;
+    npy_intp sampled_offset = 0;
 
     // Always add the first point!
+    sampled_offsets_data[sampled_index] = sampled_offset;
     if (npy_isfinite(x[a])) {
         sampled_x_data[sampled_index] = x[a];
     }
@@ -119,12 +124,14 @@ static PyObject* downsample(PyObject *self, PyObject *args) {
                 max_area = area;
                 max_area_point_x = x[range_offs];
                 max_area_point_y = y[range_offs];
+                sampled_offset = range_offs;
                 next_a = range_offs; // Next a is this b
             }
         }
         // Pick this point from the bucket
         sampled_x_data[sampled_index] = max_area_point_x;
         sampled_y_data[sampled_index] = max_area_point_y;
+        sampled_offsets_data[sampled_index] = sampled_offset;
         sampled_index++;
 
         // Current a becomes the next_a (chosen b)
@@ -132,8 +139,10 @@ static PyObject* downsample(PyObject *self, PyObject *args) {
     }
 
     // Always add last! Check for finite values!
-    double last_a_x = x[data_length - 1];
-    double last_a_y = y[data_length - 1];
+    sampled_offset = data_length - 1;
+    sampled_offsets_data[sampled_index] = sampled_offset;
+    double last_a_x = x[sampled_offset];
+    double last_a_y = y[sampled_offset];
     if (npy_isfinite(last_a_x)) {
         sampled_x_data[sampled_index] = last_a_x;
     }
@@ -146,15 +155,16 @@ static PyObject* downsample(PyObject *self, PyObject *args) {
     else {
         sampled_y_data[sampled_index] = 0.0;
     }
-
+    
     // Provide our return value
-    PyObject *value = Py_BuildValue("OO", sampled_x, sampled_y);
+    PyObject *value = Py_BuildValue("OOO", sampled_x, sampled_y, sampled_offsets);
 
     // And remove the references!
     Py_DECREF(x_array);
     Py_DECREF(y_array);
     Py_XDECREF(sampled_x);
     Py_XDECREF(sampled_y);
+    Py_XDECREF(sampled_offsets);
 
     return value;
 

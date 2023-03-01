@@ -59,9 +59,10 @@ def test_negative_threshold():
     y = np.random.randint(1000, size=ARRAY_SIZE, dtype=np.uint64)
     assert sys.getrefcount(x) == 2
     assert sys.getrefcount(y) == 2
-    nx, ny = lttbc.downsample(x, y, -THRESHOLD)
+    nx, ny, ni = lttbc.downsample(x, y, -THRESHOLD)
     assert len(nx) == ARRAY_SIZE
     assert len(ny) == ARRAY_SIZE
+    assert ni is None
     assert nx.dtype == np.double
     assert ny.dtype == np.double
     assert sys.getrefcount(x) == 2
@@ -79,9 +80,10 @@ def test_threshold_larger():
     assert sys.getrefcount(x) == 2
     assert sys.getrefcount(y) == 2
     # Will return the arrays!
-    nx, ny = lttbc.downsample(x, y, ARRAY_SIZE + 1)
+    nx, ny, ni = lttbc.downsample(x, y, ARRAY_SIZE + 1)
     assert len(nx) == ARRAY_SIZE
     assert len(ny) == ARRAY_SIZE
+    assert ni is None
     assert nx.dtype == np.double
     assert ny.dtype == np.double
     assert sys.getrefcount(x) == 2
@@ -100,15 +102,18 @@ def test_input_list():
     y = [True] * ARRAY_SIZE
     assert sys.getrefcount(x) == 2
     assert sys.getrefcount(y) == 2
-    nx, ny = lttbc.downsample(x, y, THRESHOLD)
+    nx, ny, ni = lttbc.downsample(x, y, THRESHOLD)
     assert len(nx) == THRESHOLD
     assert len(ny) == THRESHOLD
+    assert len(ni) == THRESHOLD
     assert nx.dtype == np.double
     assert ny.dtype == np.double
+    assert ni.dtype == np.intp
     assert sys.getrefcount(x) == 2
     assert sys.getrefcount(y) == 2
     assert sys.getrefcount(nx) == 2
     assert sys.getrefcount(ny) == 2
+    assert sys.getrefcount(ni) == 2
     test_array = np.array([1.0] * THRESHOLD, dtype=np.float64)
     test_array_bool = np.array([1.0] * THRESHOLD, dtype=bool)
     np.testing.assert_array_almost_equal(ny, test_array)
@@ -121,7 +126,7 @@ def test_input_list_array():
     y = np.array([True] * ARRAY_SIZE, dtype=bool)
     assert sys.getrefcount(x) == 2
     assert sys.getrefcount(y) == 2
-    nx, ny = lttbc.downsample(x, y, THRESHOLD)
+    nx, ny, ni = lttbc.downsample(x, y, THRESHOLD)
     assert len(nx) == THRESHOLD
     assert len(ny) == THRESHOLD
     assert nx.dtype == np.double
@@ -154,7 +159,7 @@ def test_downsample_uint64():
     y = np.random.randint(1000, size=ARRAY_SIZE, dtype=np.uint64)
     assert sys.getrefcount(x) == 2
     assert sys.getrefcount(y) == 2
-    nx, ny = lttbc.downsample(x, y, THRESHOLD)
+    nx, ny, ni = lttbc.downsample(x, y, THRESHOLD)
     assert len(nx) == THRESHOLD
     assert len(ny) == THRESHOLD
     assert nx.dtype == np.double
@@ -164,6 +169,11 @@ def test_downsample_uint64():
     assert sys.getrefcount(nx) == 2
     assert sys.getrefcount(ny) == 2
 
+    # test correctness of ni: it should be offsets into the source arrays
+    # that indicate which samples were extracted
+    np.testing.assert_array_equal(x[ni], nx)
+    np.testing.assert_array_equal(y[ni], ny)
+
 
 def test_downsample_bool():
     """Test the down sampling with boolean types"""
@@ -171,7 +181,7 @@ def test_downsample_bool():
     y = np.array([True] * ARRAY_SIZE, dtype=bool)
     assert sys.getrefcount(x) == 2
     assert sys.getrefcount(y) == 2
-    nx, ny = lttbc.downsample(x, y, THRESHOLD)
+    nx, ny, ni = lttbc.downsample(x, y, THRESHOLD)
     assert len(nx) == THRESHOLD
     assert len(ny) == THRESHOLD
     assert nx.dtype == np.double
@@ -192,7 +202,7 @@ def test_inf():
     y = np.array([np.inf] * ARRAY_SIZE, dtype=np.float64)
     assert sys.getrefcount(x) == 2
     assert sys.getrefcount(y) == 2
-    nx, ny = lttbc.downsample(x, y, THRESHOLD)
+    nx, ny, ni = lttbc.downsample(x, y, THRESHOLD)
     assert len(nx) == THRESHOLD
     assert len(ny) == THRESHOLD
     assert nx.dtype == np.double
@@ -211,7 +221,7 @@ def test_nan():
     y = np.array([np.nan] * ARRAY_SIZE, dtype=np.float64)
     assert sys.getrefcount(x) == 2
     assert sys.getrefcount(y) == 2
-    nx, ny = lttbc.downsample(x, y, THRESHOLD)
+    nx, ny, ni = lttbc.downsample(x, y, THRESHOLD)
     assert len(nx) == THRESHOLD
     assert len(ny) == THRESHOLD
     assert nx.dtype == np.double
@@ -232,7 +242,7 @@ def test_benchmark():
     assert sys.getrefcount(y) == 2
 
     def sample():
-        nx, ny = lttbc.downsample(x, y, LARGE_THRESHOLD)
+        nx, ny, ni = lttbc.downsample(x, y, LARGE_THRESHOLD)
         return nx, ny
 
     t_start = perf_counter()
@@ -260,7 +270,7 @@ def test_array_mix_inf_nan():
                   np.nan, 19.0], dtype=np.float64)
     assert sys.getrefcount(x) == 2
     assert sys.getrefcount(y) == 2
-    nx, ny = lttbc.downsample(x, y, 10)
+    nx, ny, ni = lttbc.downsample(x, y, 10)
     assert len(nx) == 10
     assert len(ny) == 10
     assert nx.dtype == np.double
@@ -283,7 +293,7 @@ def test_single_nan():
                   18.0, 19.0], dtype=np.float64)
     assert sys.getrefcount(x) == 2
     assert sys.getrefcount(y) == 2
-    nx, ny = lttbc.downsample(x, y, 10)
+    nx, ny, ni = lttbc.downsample(x, y, 10)
     assert len(nx) == 10
     assert len(ny) == 10
     assert nx.dtype == np.double
@@ -309,7 +319,7 @@ def test_single_inf():
                   18.0, 19.0], dtype=np.float64)
     assert sys.getrefcount(x) == 2
     assert sys.getrefcount(y) == 2
-    nx, ny = lttbc.downsample(x, y, 10)
+    nx, ny, ni = lttbc.downsample(x, y, 10)
     assert len(nx) == 10
     assert len(ny) == 10
     assert nx.dtype == np.double

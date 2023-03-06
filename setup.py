@@ -23,4 +23,4 @@ lttbc_py = Extension(
     include_dirs=[numpy_get_include(), get_script_path()],
 )
 
-setup(ext_modules=[lttbc_py])
+setup(ext_modules=[lttbc_py], py_modules=['lttbc'])

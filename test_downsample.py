@@ -4,6 +4,7 @@ from time import perf_counter
 import numpy as np
 import pytest
 
+from lttbc import downsample as downsample_compat
 import lttbc_offsets as lttbc
 
 ARRAY_SIZE = 1000
@@ -173,6 +174,10 @@ def test_downsample_uint64():
     # that indicate which samples were extracted
     np.testing.assert_array_equal(x[ni], nx)
     np.testing.assert_array_equal(y[ni], ny)
+
+    nxc, nyc = downsample_compat(x, y, THRESHOLD)
+    np.testing.assert_array_equal(nxc, nx)
+    np.testing.assert_array_equal(nyc, ny)
 
 
 def test_downsample_bool():

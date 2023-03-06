@@ -3,6 +3,14 @@ This is a low-level implementation of the `Largest-Triangle-Three-Buckets` (LTTB
 
 The code has been translated from the work of Sveinn Steinarsson (https://github.com/sveinn-steinarsson/flot-downsample/).
 
+## The Offsets Fork
+
+You are now looking at the "Offsets Fork" (by cpbotha) of the original lttbc (by dgoeries).
+
+This package, which is backwards compatible with the original lttbc, offers the
+new primary entrypoint `lttbc_offsets.downsample(x, y, threshold) -> sampled_x,
+sampled_y, sampled_offsets` which returns the third offsets array.
+
 ## Demo and 'Known Issues'
 
 The examples show the efficiency of the downsampling algorithm with a data set

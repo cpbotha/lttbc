@@ -16,16 +16,17 @@
 # - https://github.com/scipy/scipy/blob/main/pyproject.toml
 # - scipy uses a mix of build-system.requires and setup.install_requires see:
 # - https://scipy.github.io/devdocs/dev/core-dev/index.html#version-ranges-for-numpy-and-other-dependencies
-requires = ["setuptools>=61", "numpy == 1.21.6"]
+# somewhat later: We need this to work with Python 3.11, so minimum numpy 1.24.* required
+requires = ["setuptools>=61", "numpy == 1.24.3"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "lttbc-offsets"
-version = "0.3.0"
+version = "0.3.1"
 description = "Largest triangle three buckets module for Python written in C"
 authors = [{name = "European XFEL GmbH", email = "dennis.goeries@xfel.eu"}]
 dependencies = [
   # based on https://numpy.org/devdocs/dev/depending_on_numpy.html we keep the build requirement at lowest
   # but runtime dependency can be easier
-  "numpy >= 1.21"
+  "numpy >= 1.24"
 ]
